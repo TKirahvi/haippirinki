@@ -10,32 +10,29 @@ export class HaippiService {
   private currentJson = '/assets/current.json';
   private MAX_TICKETS: number = 4;
 
-  private haippiList: haippi.Person[];
+  private haippiList: BehaviorSubject<haippi.Person[]> = new BehaviorSubject([]);
+  haippiList$: Observable<haippi.Person[]> = this.haippiList.asObservable();
 
   private availableTickets: BehaviorSubject<number> = new BehaviorSubject(this.MAX_TICKETS);
   availableTickets$: Observable<number> = this.availableTickets.asObservable();
 
   constructor(private http: HttpClient) { 
+    this.populateHaippiList();
   }
 
-  public populateHaippiList(): Promise<haippi.Person[]> {
-    return this.http.get<haippi.Person[]>(this.currentJson).toPromise().then(data => {
-      this.haippiList = data;
+  public populateHaippiList() {
+    this.http.get<haippi.Person[]>(this.currentJson).toPromise().then(data => {
+      this.haippiList.next(data);
       console.log(this.countUsedTickets());
-      //this.availableTickets.next(this.countUsedTickets());
-      return this.haippiList;
     });
   }
 
   private countUsedTickets(): number {
-    return this.haippiList.reduce((prev: number, curr: haippi.Person) => prev + curr.tickets, 0);
-  }
-
-  getHaippi(): haippi.Person[] {
-    return this.haippiList;
+    return this.haippiList.value.reduce((prev: number, curr: haippi.Person) => prev + curr.tickets, 0);
   }
 
   redeemTickets(person: haippi.Person, tickets: number) {
+    console.log(person.name + " takes " + tickets);
     if ( tickets > 0 ) {
       person.tickets = tickets;
       person.eligibleFor = 1;
@@ -46,9 +43,12 @@ export class HaippiService {
       person.tickets = 0;
     }
 
-    this.haippiList.pop();
-    this.haippiList.push(person);
+    const localList = this.haippiList.value;
+    
+    localList.shift();
+    localList.push(person);
     this.availableTickets.next(this.countUsedTickets());
+    this.haippiList.next(localList);
     this.backup();
   }
 
@@ -59,7 +59,7 @@ export class HaippiService {
   }
 
   getPerson(name: string): haippi.Person {
-    return this.haippiList.find(p => p.name === name);
+    return this.haippiList.value.find(p => p.name === name);
   }
 
   private backup() {
@@ -68,13 +68,15 @@ export class HaippiService {
   }
 
   private updateOrders() {
-    for ( let i = 0; i < this.haippiList.length; i++ ) {
-      const person: haippi.Person = this.haippiList[i];
+    const localList = this.haippiList.value;
+    for ( let i = 0; i < localList.length; i++ ) {
+      const person: haippi.Person = localList[i];
       person.order = i;
     }
+    this.haippiList.next(localList);
   }
   private saveToJson() {
-    const foo = JSON.stringify(this.haippiList);
+    const foo = JSON.stringify(this.haippiList.value);
     console.log(foo);
   }
 }

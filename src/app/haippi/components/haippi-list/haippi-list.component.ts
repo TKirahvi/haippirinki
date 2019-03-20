@@ -12,7 +12,7 @@ export class HaippiListComponent implements OnInit {
   available: number;
 
   constructor(private haippiService: HaippiService) { 
-    this.haippiService.populateHaippiList().then(data => {
+    this.haippiService.haippiList$.subscribe(data => {
       this.haippiList = data;
     });
 

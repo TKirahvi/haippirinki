@@ -1,6 +1,6 @@
 <div class="person">
   <div class="person-property person-name">{{person.name}}</div>
   <div class="person-property person-tickets">{{person.tickets}}</div>
-  <div class="person-property person-eligible"><input type="text" [value]="person.eligibleFor"/></div>
+  <div class="person-property person-eligible"><input type="text" [value]="person.eligibleFor" (input)="changeTicketAmount($event)" /></div>
   <div class="person-property person-redeen"><button (click)="redeem()">redeem</button></div>
 </div>

@@ -11,7 +11,7 @@ export class HaippiItemComponent implements OnInit {
   @Input()
   person: haippi.Person;
 
-  ticketAmount: number = 0;;
+  ticketAmount: number = 0;
 
   constructor(private haippiService: HaippiService) { 
   }
@@ -19,7 +19,12 @@ export class HaippiItemComponent implements OnInit {
   ngOnInit() {
   }
 
+  changeTicketAmount(event) { 
+    this.ticketAmount = parseInt(event.data);
+  }
+
   redeem() {
+    // Ticketamount is 0 at the beginning if no change is made
     if ( this.ticketAmount > 0 ) {
       this.take();
     } else {
