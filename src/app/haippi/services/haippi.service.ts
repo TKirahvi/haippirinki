@@ -38,14 +38,14 @@ export class HaippiService {
   }
 
   private countUsedTickets(): number {
-    return this.haippiList.value.reduce((prev: number, curr: haippi.Person) => prev + +curr.tickets, 0);
+    return this.haippiList.value.reduce((prev: number, curr: haippi.Person) => prev + +curr.holding, 0);
   }
 
   redeemTickets(person: haippi.Person, tickets: number) {
     if ( this.areEnoughTicketsAvailable(+tickets)) {
       console.log(person.name + " takes " + tickets);
       if ( tickets > 0 ) {
-        person.tickets = tickets;
+        person.holding = tickets;
         person.eligibleFor = 1;
         this.availableTickets.next(this.availableTickets.value - tickets);
       } else {
@@ -53,7 +53,7 @@ export class HaippiService {
         if ( person.eligibleFor > 4 ) {
           person.eligibleFor = 4;
         }
-        person.tickets = 0;
+        person.holding = 0;
       }
       
       console.log(person.name + " is eligible for " + person.eligibleFor + " tickets");
@@ -66,7 +66,7 @@ export class HaippiService {
       this.haippiList.next(localList);
       this.backup();
     } else {
-      alert("Ei tarpeeksi lippuja vapaana, vapauta ennen uusintakäyttöä");
+      alert("Ei tarpeeksi lippuja vapaana, vapauta ennen uusiokäyttöä");
     }
   }
 
@@ -75,9 +75,9 @@ export class HaippiService {
   }
 
   returnTickets(person: haippi.Person) {
-    console.log(person.name + " returns " + person.tickets + " tickets");
-    this.availableTickets.next(this.availableTickets.value + +person.tickets);
-    person.tickets = 0;
+    console.log(person.name + " returns " + person.holding + " tickets");
+    this.availableTickets.next(this.availableTickets.value + +person.holding);
+    person.holding = 0;
     //this.haippiList.value[this.haippiList.value.findIndex(p => p.name === person.name)] = person;
   }
 
