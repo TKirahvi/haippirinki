@@ -8,8 +8,8 @@ Lippuja vapaana: {{available}}
 </div>
 
 <div id="person-list-container">
-  <div *ngFor="let person of haippiList">
-    <app-haippi-item [person]="person"></app-haippi-item>
+  <div *ngFor="let person of haippiList; let i = index" [attr.data-index]="i">
+    <app-haippi-item [person]="person" [index]="i"></app-haippi-item>
   </div>
 </div>
 

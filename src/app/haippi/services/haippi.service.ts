@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { saveAs } from 'file-saver';
 
 @Injectable({
   providedIn: 'root'
@@ -22,40 +23,62 @@ export class HaippiService {
 
   public populateHaippiList() {
     this.http.get<haippi.Person[]>(this.currentJson).toPromise().then(data => {
+      data.sort(this.sortHaippiList);
       this.haippiList.next(data);
-      console.log(this.countUsedTickets());
+      this.availableTickets.next(this.MAX_TICKETS - this.countUsedTickets());
     });
   }
 
+  private sortHaippiList(a: haippi.Person, b: haippi.Person) {
+    if (a.order < b.order)
+      return -1;
+    if (a.order > b.order)
+      return 1;
+    return 0;
+  }
+
   private countUsedTickets(): number {
-    return this.haippiList.value.reduce((prev: number, curr: haippi.Person) => prev + curr.tickets, 0);
+    return this.haippiList.value.reduce((prev: number, curr: haippi.Person) => prev + +curr.tickets, 0);
   }
 
   redeemTickets(person: haippi.Person, tickets: number) {
-    console.log(person.name + " takes " + tickets);
-    if ( tickets > 0 ) {
-      person.tickets = tickets;
-      person.eligibleFor = 1;
-      this.availableTickets.next(this.availableTickets.value - tickets);
-      // if tickets > available => FAIL
-    } else {
-      person.eligibleFor++;
-      person.tickets = 0;
-    }
+    if ( this.areEnoughTicketsAvailable(+tickets)) {
+      console.log(person.name + " takes " + tickets);
+      if ( tickets > 0 ) {
+        person.tickets = tickets;
+        person.eligibleFor = 1;
+        this.availableTickets.next(this.availableTickets.value - tickets);
+      } else {
+        person.eligibleFor++;
+        if ( person.eligibleFor > 4 ) {
+          person.eligibleFor = 4;
+        }
+        person.tickets = 0;
+      }
+      
+      console.log(person.name + " is eligible for " + person.eligibleFor + " tickets");
 
-    const localList = this.haippiList.value;
-    
-    localList.shift();
-    localList.push(person);
-    this.availableTickets.next(this.countUsedTickets());
-    this.haippiList.next(localList);
-    this.backup();
+      const localList = this.haippiList.value;
+      
+      localList.shift();
+      localList.push(person);
+      this.availableTickets.next(this.MAX_TICKETS - this.countUsedTickets());
+      this.haippiList.next(localList);
+      this.backup();
+    } else {
+      alert("Ei tarpeeksi lippuja vapaana, vapauta ennen uusintakäyttöä");
+    }
+  }
+
+  private areEnoughTicketsAvailable(tickets: number): boolean {
+    return tickets <= this.availableTickets.value;
   }
 
   returnTickets(person: haippi.Person) {
-    this.availableTickets.next(this.availableTickets.value + person.tickets);
-    // if availableTickets > 4 => FAIL
+    console.log(person.name + " returns " + person.tickets + " tickets");
+    this.availableTickets.next(this.availableTickets.value + +person.tickets);
     person.tickets = 0;
+    //this.haippiList.value[this.haippiList.value.findIndex(p => p.name === person.name)] = person;
   }
 
   getPerson(name: string): haippi.Person {
@@ -76,7 +99,7 @@ export class HaippiService {
     this.haippiList.next(localList);
   }
   private saveToJson() {
-    const foo = JSON.stringify(this.haippiList.value);
-    console.log(foo);
+    const blob = new Blob([JSON.stringify(this.haippiList.value)], {type : 'application/json'});
+    //saveAs(blob, '/assets/current.json');
   }
 }

@@ -1,32 +1,32 @@
 [
     {
         "name": "Mikko Tanskanen",
-        "eligibleFor": "0",
-        "hasTickets": "4",
+        "eligibleFor": "1",
+        "tickets": "4",
         "order": 4
     },
     {
         "name": "Jussi Nykänen",
         "eligibleFor": "2",
-        "hasTickets": "0",
+        "tickets": "0",
         "order": 0
     },
     {
         "name": "Jyrki Hautamäki",
         "eligibleFor": "1",
-        "hasTickets": "0",
+        "tickets": "0",
         "order": 1
     },
     {
         "name": "Henriikka Kolu",
         "eligibleFor": "2",
-        "hasTickets": "0",
+        "tickets": "0",
         "order": 2
     },
     {
         "name": "Mikko Setälä",
         "eligibleFor": "1",
-        "hasTickets": "0",
+        "tickets": "0",
         "order": 3
     }
 ]

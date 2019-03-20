@@ -18,6 +18,7 @@ export class HaippiListComponent implements OnInit {
 
     this.haippiService.availableTickets$.subscribe(availableTickets => {
       this.available = availableTickets;
+      console.log(availableTickets + " tickets available")
     });
   }
 
