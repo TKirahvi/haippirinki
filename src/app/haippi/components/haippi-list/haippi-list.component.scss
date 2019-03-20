@@ -1,0 +1,14 @@
+
+#person-title-row, #person-list-container {
+    position: absolute;
+    left: 20%;
+    width: 300px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#person-list-container {
+    top: 50px;
+}
+

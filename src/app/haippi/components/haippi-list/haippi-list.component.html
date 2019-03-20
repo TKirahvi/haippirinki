@@ -1,0 +1,15 @@
+Lippuja vapaana: {{available}}
+
+<div id="person-title-row">
+    <div class="person-property person-name">Nimi</div>
+    <div class="person-property person-tickets">Hallussa</div>
+    <div class="person-property person-eligible">Oikeutettu</div>
+    <div class="person-property person-redeen">Varaa</div>
+</div>
+
+<div id="person-list-container">
+  <div *ngFor="let person of haippiList">
+    <app-haippi-item [person]="person"></app-haippi-item>
+  </div>
+</div>
+
