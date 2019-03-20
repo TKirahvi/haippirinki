@@ -2,11 +2,11 @@ import { Component, OnInit, Input, AfterViewInit, AfterContentInit } from '@angu
 import { HaippiService } from '../../services/haippi.service';
 
 @Component({
-  selector: 'app-haippi-item',
+  selector: '[app-haippi-item]',
   templateUrl: './haippi-item.component.html',
   styleUrls: ['./haippi-item.component.scss']
 })
-export class HaippiItemComponent implements OnInit, AfterContentInit {
+export class HaippiItemComponent implements OnInit {
 
   @Input()
   person: haippi.Person;
@@ -20,14 +20,6 @@ export class HaippiItemComponent implements OnInit, AfterContentInit {
   }
 
   ngOnInit() {
-  }
-
-  ngAfterContentInit(): void {
-    this.ticketAmount = this.person.eligibleFor;
-  }
-
-  changeTicketAmount(event) { 
-    this.ticketAmount = parseInt(event.data);
   }
 
   redeem() {

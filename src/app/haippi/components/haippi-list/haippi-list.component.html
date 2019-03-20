@@ -1,15 +1,18 @@
-Lippuja vapaana: {{available}}
+<div id="tickets-available">Lippuja vapaana: <strong>{{available | async}}</strong></div>
 
-<div id="person-title-row">
-    <div class="person-property person-name">Nimi</div>
-    <div class="person-property person-holding">Hallussa</div>
-    <div class="person-property person-eligible">Oikeutettu</div>
-    <div class="person-property person-redeen">Varaa</div>
+<div id="person-table-container">
+  <table id="person-table" class="table table-striped table-borderless">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Hallussa</th>
+        <th scope="col">Oikeutettu</th>
+        <th scope="col">Varausmäärä</th>
+        <th scope="col">Toiminto</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr [ngClass]="{'table-success': i == 0}" *ngFor="let person of haippiList; let i = index" [attr.data-index]="i" app-haippi-item></tr>
+    </tbody>
+  </table>
 </div>
-
-<div id="person-list-container">
-  <div *ngFor="let person of haippiList; let i = index" [attr.data-index]="i">
-    <app-haippi-item [person]="person" [index]="i"></app-haippi-item>
-  </div>
-</div>
-

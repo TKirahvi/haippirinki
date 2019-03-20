@@ -1,8 +1,6 @@
-<div class="person">
-  <div class="person-property person-name">{{person.name}}</div>
-  <div class="person-property person-holding">{{person.holding}}</div>
-  <div class="person-property person-eligible"><input type="text" [value]="person.eligibleFor" (input)="changeTicketAmount($event)" /></div>
-  <div *ngIf="index == 0" class="person-property person-redeem"><button (click)="redeem()">Varaa</button></div>
-  <div *ngIf="index == 0" class="person-property person-skip"><button (click)="skip()">Ohita</button></div>
-  <div *ngIf="person.tickets > 0" class="person-property person-free"><button (click)="return()">Vapauta</button></div>
-</div>
+<th scope="row">{{person.name}}</th>
+<td class="person-holding">{{person.holding}}</td>
+<td class="persong-eligible">{{person.eligibleFor}}</td>
+<td class="person-amount"><input type="text" [value]="ticketAmount" /></td>
+<td class="person-redeem"><button *ngIf="index == 0" (click)="redeem()">Varaa</button></td>
+<!--<td><button *ngIf="person.holding > 0"  (click)="return()">Vapauta</button></td>-->

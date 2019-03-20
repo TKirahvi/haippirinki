@@ -1,15 +1,12 @@
-
-#person-title-row, #person-list-container {
-    position: absolute;
-    left: 20%;
-    width: 300px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+#tickets-available {
+    font-size: 22px;
+    padding: 20px;
 }
 
-#person-list-container {
-    top: 50px;
-    flex-direction: column !important;
+#person-table-container {
+    #person-table {
+        width: 60%;
+        margin: auto;
+        text-align: center;
+    }
 }
-
