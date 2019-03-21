@@ -28,5 +28,41 @@
         "eligibleFor": "1",
         "holding": "0",
         "order": 3
+    },
+    {
+        "name": "Matti Pulkkinen",
+        "eligibleFor": "2",
+        "holding": "0",
+        "order":4
+    },
+    {
+        "name": "Rami Lehti",
+        "eligibleFor": "2",
+        "holding": "0",
+        "order": 5
+    },
+    {
+        "name": "Annika Salo",
+        "eligibleFor": "1",
+        "holding": "0",
+        "order": 6
+    },
+    {
+        "name": "Otto-Ville Savolainen",
+        "eligibleFor": "1",
+        "holding": "0",
+        "order": 7
+    },
+    {
+        "name": "Oskari Häkkinen",
+        "eligibleFor": "2",
+        "holding": "0",
+        "order": 8
+    },
+    {
+        "name": "Antti Rämö",
+        "eligibleFor": "1",
+        "holding": "0",
+        "order": 9
     }
 ]

@@ -5,8 +5,16 @@
 
 #person-table-container {
     #person-table {
-        width: 60%;
+        width: 40%;
         margin: auto;
         text-align: center;
+
+        td, th {
+            text-align: left;
+        }
+
+        td .person-skip {
+            margin-left: 5px;
+        }
     }
 }

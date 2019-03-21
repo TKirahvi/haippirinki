@@ -21,12 +21,20 @@ export class HaippiService {
     this.populateHaippiList();
   }
 
-  public populateHaippiList() {
+  populateHaippiList() {
     this.http.get<haippi.Person[]>(this.currentJson).toPromise().then(data => {
       data.sort(this.sortHaippiList);
       this.haippiList.next(data);
       this.availableTickets.next(this.MAX_TICKETS - this.countUsedTickets());
     });
+  }
+
+  getMaxTickets(): number {
+    return this.MAX_TICKETS; 
+  }
+
+  getFirstPersonEligibleAmount(): number {
+    return this.haippiList.value[0].eligibleFor;
   }
 
   private sortHaippiList(a: haippi.Person, b: haippi.Person) {
@@ -37,40 +45,46 @@ export class HaippiService {
     return 0;
   }
 
+  addPerson(personName: string) {
+    let newPerson: haippi.Person = {
+      name: personName, 
+      holding: 0, 
+      eligibleFor: 1,
+      order: this.haippiList.value.length
+    }
+    this.haippiList.value.push(newPerson);
+  }
+
   private countUsedTickets(): number {
     return this.haippiList.value.reduce((prev: number, curr: haippi.Person) => prev + +curr.holding, 0);
   }
 
   redeemTickets(person: haippi.Person, tickets: number) {
-    if ( this.areEnoughTicketsAvailable(+tickets)) {
-      console.log(person.name + " takes " + tickets);
-      if ( tickets > 0 ) {
-        person.holding = tickets;
-        person.eligibleFor = 1;
-        this.availableTickets.next(this.availableTickets.value - tickets);
-      } else {
-        person.eligibleFor++;
-        if ( person.eligibleFor > 4 ) {
-          person.eligibleFor = 4;
-        }
-        person.holding = 0;
-      }
-      
-      console.log(person.name + " is eligible for " + person.eligibleFor + " tickets");
-
-      const localList = this.haippiList.value;
-      
-      localList.shift();
-      localList.push(person);
-      this.availableTickets.next(this.MAX_TICKETS - this.countUsedTickets());
-      this.haippiList.next(localList);
-      this.backup();
+    console.log(person.name + " takes " + tickets);
+    if ( tickets > 0 ) {
+      person.holding = tickets;
+      person.eligibleFor = 1;
+      this.availableTickets.next(this.availableTickets.value - tickets);
     } else {
-      alert("Ei tarpeeksi lippuja vapaana, vapauta ennen uusiokäyttöä");
+      person.eligibleFor++;
+      if ( person.eligibleFor > 4 ) {
+        person.eligibleFor = 4;
+      }
+      person.holding = 0;
     }
+    
+    console.log(person.name + " is eligible for " + person.eligibleFor + " tickets");
+
+    const localList = this.haippiList.value;
+    
+    this.haippiList.value.shift();
+    this.haippiList.value.push(person);
+    this.availableTickets.next(this.MAX_TICKETS - this.countUsedTickets());
+    this.backup();
+    
   }
 
-  private areEnoughTicketsAvailable(tickets: number): boolean {
+  public areEnoughTicketsAvailable(tickets: number): boolean {
     return tickets <= this.availableTickets.value;
   }
 

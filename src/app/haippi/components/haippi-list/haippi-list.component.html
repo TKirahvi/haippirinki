@@ -1,18 +1,28 @@
-<div id="tickets-available">Lippuja vapaana: <strong>{{available | async}}</strong></div>
+<div id="tickets-available">Lippuja vapaana: <strong>{{available | async}} / {{totalTickets}}</strong></div>
 
 <div id="person-table-container">
-  <table id="person-table" class="table table-striped table-borderless">
+  <table id="person-table" class="table table-striped table-borderless table-hover">
     <thead class="thead-dark">
       <tr>
-        <th scope="col">Name</th>
-        <th scope="col">Hallussa</th>
-        <th scope="col">Oikeutettu</th>
-        <th scope="col">Varausmäärä</th>
-        <th scope="col">Toiminto</th>
+        <th scope="col" style="width: 40%">Name</th>
+        <th scope="col" style="width: 10%">Hallussa</th>
+        <th scope="col" style="width: 10%">Oikeutettu</th>
+        <th scope="col" style="width: 10%">Varausmäärä</th>
+        <th scope="col" style="width: 30%">Toiminto</th>
       </tr>
     </thead>
     <tbody>
-        <tr [ngClass]="{'table-success': i == 0}" *ngFor="let person of haippiList; let i = index" [attr.data-index]="i" app-haippi-item></tr>
+        <tr [ngClass]="{'table-success': i == 0}" *ngFor="let person of haippiList | async; let i = index" [attr.data-index]="i">
+            <th scope="row">{{person.name}}</th>
+            <td class="person-holding">{{person.holding}}</td>
+            <td class="persong-eligible">{{person.eligibleFor}}</td>
+            <td class="person-amount"><input class="form-control col-xs-5 col-lg-6" *ngIf="i == 0" type="text" [(ngModel)]="ticketAmount" /></td>
+            <td class="person-redeem">
+              <button class="btn btn-primary person-redeem" *ngIf="i == 0 && person.holding == 0" (click)="redeem(person)">Varaa</button>
+              <button class="btn btn-primary person-skip" *ngIf="i == 0 && person.holding == 0" (click)="skip(person)">Ohita</button>
+              <button class="btn btn-primary person-return" *ngIf="person.holding > 0"  (click)="return(person)">Vapauta</button>
+            </td>
+        </tr>
     </tbody>
   </table>
 </div>
