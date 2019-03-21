@@ -1,6 +1,9 @@
 <div id="add-new-container">
-  Lisää uusi haippaaja: 
-  <div class="input-group col-xs-5 col-lg-1">
+  <div class="input-group col-xs-5 col-lg-3 mb-3">
+    
+    <div class="input-group-prepend">
+      <span class="input-group-text" id="basic-addon3">Lisää uusi haippaaja:</span>
+    </div>
     <input class="form-control" type="text" [(ngModel)]="name" />
     <div class="input-group-append">
       <button class="btn btn-primary" (click)="addPerson()">Lisää</button>
