@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { saveAs } from 'file-saver';
+import { AngularFireDatabase } from 'angularfire2/database';
+import { AngularFireList } from '@angular/fire/database';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +19,14 @@ export class HaippiService {
   private availableTickets: BehaviorSubject<number> = new BehaviorSubject(this.MAX_TICKETS);
   availableTickets$: Observable<number> = this.availableTickets.asObservable();
 
-  constructor(private http: HttpClient) { 
+  constructor(private http: HttpClient, private db: AngularFireDatabase) { 
+    var foo: AngularFireList<haippi.Person> = this.db.list('/users');
+    var bar = this.db.list('/users/KCnCCWLOznfV8ywjXUSL');
+    /*this.afs.collection('users').snapshotChanges().subscribe(x => {
+      console.log(x);
+    });*/
+    
+    console.log(foo);
     this.populateHaippiList();
   }
 
@@ -53,6 +62,13 @@ export class HaippiService {
       order: this.haippiList.value.length
     }
     this.haippiList.value.push(newPerson);
+
+    /*this.afs.collection('users').add({
+      name: personName,
+      holding: 0, 
+      eligibleFor: 1,
+      order: this.haippiList.value.length
+    });*/
   }
 
   private countUsedTickets(): number {
@@ -101,7 +117,6 @@ export class HaippiService {
 
   private backup() {
     this.updateOrders();
-    this.saveToJson();
   }
 
   private updateOrders() {
@@ -111,9 +126,5 @@ export class HaippiService {
       person.order = i;
     }
     this.haippiList.next(localList);
-  }
-  private saveToJson() {
-    const blob = new Blob([JSON.stringify(this.haippiList.value)], {type : 'application/json'});
-    //saveAs(blob, '/assets/current.json');
   }
 }
