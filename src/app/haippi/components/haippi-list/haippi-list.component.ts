@@ -39,13 +39,19 @@ export class HaippiListComponent implements OnInit {
     if ( this.haippiService.areEnoughTicketsAvailable(this.ticketAmount)) {
       if ( this.ticketAmount > person.eligibleFor ) {
         if ( confirm("Oletko varma, että haluat varata useamman kuin henkilö on oikeutettu?") ) {
-          this.haippiService.redeemTickets(this.haippiService.getPerson(person.name), this.ticketAmount);
-          this.ticketAmount = this.haippiService.getFirstPersonEligibleAmount();
+          this.takeTickets(person);
         }
+      } else {
+        this.takeTickets(person);
       }
     } else {
       alert("Ei tarpeeksi lippuja vapaana (yritit varata: " + this.ticketAmount + "), vapauta ennen uusiokäyttöä");
     }
+  }
+
+  private takeTickets(person: haippi.Person) {    
+    this.haippiService.redeemTickets(this.haippiService.getPerson(person.name), this.ticketAmount);
+    this.ticketAmount = this.haippiService.getFirstPersonEligibleAmount();
   }
 
   return(person: haippi.Person) {
