@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { AngularFireDatabase } from 'angularfire2/database';
+//import { AngularFireDatabase } from 'angularfire2/database';
 import { AngularFireList } from '@angular/fire/database';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, CollectionReference } from '@angular/fire/firestore';
+import * as firebase from 'firebase';
 
 @Injectable({
   providedIn: 'root'
@@ -19,18 +20,21 @@ export class HaippiService {
   private availableTickets: BehaviorSubject<number> = new BehaviorSubject(this.MAX_TICKETS);
   availableTickets$: Observable<number> = this.availableTickets.asObservable();
 
-  constructor(private http: HttpClient, private db: AngularFireDatabase) { 
-    var foo: AngularFireList<haippi.Person> = this.db.list('/users');
-    var bar = this.db.list('/users/KCnCCWLOznfV8ywjXUSL');
-    /*this.afs.collection('users').snapshotChanges().subscribe(x => {
-      console.log(x);
-    });*/
-    
-    console.log(foo);
+  private usersCollection: CollectionReference;
+
+  constructor(private http: HttpClient) { 
+    this.usersCollection = firebase.firestore().collection('users');    
     this.populateHaippiList();
   }
 
   populateHaippiList() {
+    this.usersCollection.onSnapshot((qSnap) => {
+      qSnap.forEach(q => {
+        let d = q.data();
+        console.log(q.id, d.name);
+      });
+    });
+
     this.http.get<haippi.Person[]>(this.currentJson).toPromise().then(data => {
       data.sort(this.sortHaippiList);
       this.haippiList.next(data);
