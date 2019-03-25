@@ -28,7 +28,7 @@ export class HaippiService {
   }
 
   populateHaippiList() {
-    let persons: haippi.Person[] = [];
+    /*let persons: haippi.Person[] = [];
     this.usersCollection.onSnapshot((qSnap) => {
       qSnap.forEach(q => {
         const person = this.convertToPerson(q);
@@ -37,15 +37,13 @@ export class HaippiService {
         }
       });
     });
-    persons.sort(this.sortHaippiList);
     this.haippiList.next(persons);
-    this.availableTickets.next(this.MAX_TICKETS - this.countUsedTickets());
+    this.availableTickets.next(this.MAX_TICKETS - this.countUsedTickets());*/
 
-    /*this.http.get<haippi.Person[]>(this.currentJson).toPromise().then(data => {
-      data.sort(this.sortHaippiList);
+    this.http.get<haippi.Person[]>(this.currentJson).toPromise().then(data => {
       this.haippiList.next(data);
       this.availableTickets.next(this.MAX_TICKETS - this.countUsedTickets());
-    });*/
+    });
   }
 
   convertToPerson(doc: DocumentData): haippi.Person {
@@ -64,14 +62,6 @@ export class HaippiService {
 
   getFirstPersonEligibleAmount(): number {
     return this.haippiList.value[0].eligibleFor;
-  }
-
-  private sortHaippiList(a: haippi.Person, b: haippi.Person) {
-    if (a.order < b.order)
-      return -1;
-    if (a.order > b.order)
-      return 1;
-    return 0;
   }
 
   addPerson(personName: string) {

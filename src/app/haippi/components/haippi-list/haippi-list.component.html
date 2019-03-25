@@ -12,7 +12,7 @@
       </tr>
     </thead>
     <tbody>
-        <tr [ngClass]="{'table-success': i == 0}" *ngFor="let person of haippiList | async; let i = index" [attr.data-index]="i">
+        <tr [ngClass]="{'table-success': i == 0}" *ngFor="let person of haippiList | async | orderBy: order; let i = index" [attr.data-index]="i">
             <th scope="row">{{person.name}}</th>
             <td class="person-holding">{{person.holding}}</td>
             <td class="persong-eligible">{{person.eligibleFor}}</td>

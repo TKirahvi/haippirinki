@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { HaippiListComponent } from './haippi/components/haippi-list/haippi-list.component';
 import { AddPersonComponent } from './haippi/components/add-person/add-person.component';
 import { environment } from '../environments/environment';
+import { OrderByPipe } from './haippi/pipes/orderby.pipe';
 
 firebase.initializeApp(environment.firebase);
 
@@ -15,7 +16,8 @@ firebase.initializeApp(environment.firebase);
   declarations: [
     AppComponent,
     HaippiListComponent,
-    AddPersonComponent
+    AddPersonComponent,
+    OrderByPipe
   ],
   imports: [
     BrowserModule,
