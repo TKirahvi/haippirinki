@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 //import { AngularFireDatabase } from 'angularfire2/database';
 import { AngularFireList } from '@angular/fire/database';
-import { AngularFirestore, CollectionReference } from '@angular/fire/firestore';
+import { AngularFirestore, CollectionReference, DocumentData } from '@angular/fire/firestore';
 import * as firebase from 'firebase';
 
 @Injectable({
@@ -28,18 +28,34 @@ export class HaippiService {
   }
 
   populateHaippiList() {
+    let persons: haippi.Person[] = [];
     this.usersCollection.onSnapshot((qSnap) => {
       qSnap.forEach(q => {
-        let d = q.data();
-        console.log(q.id, d.name);
+        const person = this.convertToPerson(q);
+        if ( persons.find(p => p.id === q.data().id) == undefined ) {
+          persons.push(person);
+        }
       });
     });
+    persons.sort(this.sortHaippiList);
+    this.haippiList.next(persons);
+    this.availableTickets.next(this.MAX_TICKETS - this.countUsedTickets());
 
-    this.http.get<haippi.Person[]>(this.currentJson).toPromise().then(data => {
+    /*this.http.get<haippi.Person[]>(this.currentJson).toPromise().then(data => {
       data.sort(this.sortHaippiList);
       this.haippiList.next(data);
       this.availableTickets.next(this.MAX_TICKETS - this.countUsedTickets());
-    });
+    });*/
+  }
+
+  convertToPerson(doc: DocumentData): haippi.Person {
+    return {
+      id: doc.id,
+      name: doc.data().name,
+      eligibleFor: doc.data().eligibleFor,
+      holding: doc.data().hodling,
+      order: doc.data().order
+    };
   }
 
   getMaxTickets(): number {
@@ -67,12 +83,6 @@ export class HaippiService {
     }
     this.haippiList.value.push(newPerson);
 
-    /*this.afs.collection('users').add({
-      name: personName,
-      holding: 0, 
-      eligibleFor: 1,
-      order: this.haippiList.value.length
-    });*/
   }
 
   private countUsedTickets(): number {
